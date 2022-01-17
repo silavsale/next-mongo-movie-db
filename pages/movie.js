@@ -1,7 +1,7 @@
 import Head from "next/head"
 import clientPromise from "../lib/mongodb"
 
-export default function Home({ movies }) {
+export default function Movie({ movies }) {
   return (
     <div className="container">
       <Head>
@@ -13,7 +13,7 @@ export default function Home({ movies }) {
         ></link>
       </Head>
       <div className="container">
-        <h1 className="bg-green-500">Movies app with Next and MongoDB</h1>
+        <h1 className="bg-green-500">This is the Movies page</h1>
       </div>
 
       <div className="container mx-auto">
