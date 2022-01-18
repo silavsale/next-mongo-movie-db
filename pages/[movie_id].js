@@ -3,9 +3,8 @@ import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
 
 export default function MovieDetails({}) {
-  const uri = process.env.RAPID_API_PRIVATE_KEY
+  const uri = process.env.NEXT_PUBLIC_RAPID_API_KEY
 
-  console.log("uri", uri)
   const router = useRouter()
   const movieID = router.query.movie_id
   const [movies, setMovies] = useState([])
