@@ -1,0 +1,12 @@
+.input-container {
+  background-color: rgb(204, 247, 248);
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  border: 1px solid green;
+}
+
+.poster {
+  height: 350px;
+  width: 280px;
+}

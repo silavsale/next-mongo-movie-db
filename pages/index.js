@@ -1,5 +1,6 @@
 import Head from "next/head"
 import clientPromise from "../lib/mongodb"
+import "../styles/style.css"
 
 export default function Home({ movies }) {
   return (
