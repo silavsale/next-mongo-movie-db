@@ -1,10 +1,40 @@
 import Head from "next/head"
-import clientPromise from "../lib/mongodb"
-import "../styles/style.css"
+import React, { useEffect, useState } from "react"
 
-export default function Home({ movies }) {
+export default function MovieDetails({}) {
+  const uri = process.env.NEXT_PUBLIC_RAPID_API_KEY
+
+  const [movies, setMovies] = useState([])
+  const [inputText, setInputText] = useState("")
+  const [query, setQuery] = useState("")
+
+  useEffect(async () => {
+    const data = await fetch(
+      `https://imdb8.p.rapidapi.com/title/find?q=${query}`,
+      {
+        method: "GET",
+        headers: {
+          "x-rapidapi-host": "imdb8.p.rapidapi.com",
+          "x-rapidapi-key": uri,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        let resData = data.results
+        console.log("resData", resData)
+        let results = resData.filter((result) => result.year !== undefined)
+        setMovies(results)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    // let resData = await data.json()
+    // resData = resData.results
+  }, [query])
+
   return (
-    <div className="container">
+    <div>
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
@@ -13,18 +43,31 @@ export default function Home({ movies }) {
           rel="stylesheet"
         ></link>
       </Head>
-      <div className="container">
-        <h1 className="bg-green-500">Movies app with Next and MongoDB</h1>
-      </div>
-
-      <div className="container mx-auto">
-        <div className="flex flex-wrap my-16">
+      <div className="flex-container">
+        <div className="input-container">
+          <h3>
+            <span>[</span> Enter movie title <span>]</span>
+          </h3>
+          <input
+            type="text"
+            placeholder="TYPE MOVIE TITLE"
+            onChange={(e) => setInputText(e.target.value)}
+          />
+          <button className="button" onClick={() => setQuery(inputText)}>
+            <span>[</span> Search <span>]</span>
+          </button>
+        </div>
+        <div className="movies-results-container">
           {movies &&
             movies.map((movie, index) => (
-              <div className="w-1/4 p-16 border border-black" key={index}>
+              <div className="movie" key={index}>
                 <h2>{movie.title}</h2>
                 <p>Releace Date: {movie.year}</p>
-                <p>IMDB Rating: {movie.imdb.rating}</p>
+                <img
+                  className="poster"
+                  src={movie.image?.url}
+                  alt={movie.title}
+                ></img>
               </div>
             ))}
         </div>
@@ -33,18 +76,8 @@ export default function Home({ movies }) {
   )
 }
 
-export async function getServerSideProps() {
-  const client = await clientPromise
-  const db = client.db("sample_mflix")
-  const data = await db
-    .collection("movies")
-    .find({ year: 2011, "imdb.rating": { $gt: 8 } })
-    .limit(20)
-    .toArray()
-
-  const movies = JSON.parse(JSON.stringify(data))
-
+export async function getServerSideProps(context) {
   return {
-    props: { movies },
+    props: {},
   }
 }
